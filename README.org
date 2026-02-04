@@ -1,0 +1,12 @@
+* solace
+this was my discord-ish app from march 2025, went on for a few months but getting it fully done was a bit much for one person
+
+maybe someone would want to continue it. if so - feel free to open prs
+
+licensed under the hippocratic license, means any forks have to be opensource, carry the same license and follow the ethical guidelines
+
+the frontend was entirely rewritten in jan 2026, it looks nice but is kinda buggy 
+
+the vcs is erased so that i could add the license properly
+
+the build and deploy instructions are self-documenting

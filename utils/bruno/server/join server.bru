@@ -1,0 +1,21 @@
+meta {
+  name: join server
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{url}}/api/server/join/{{server_id}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "asdfas"
+  }
+}

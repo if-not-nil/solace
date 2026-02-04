@@ -1,0 +1,715 @@
+definitions:
+  server.ChannelNewRequest:
+    properties:
+      name:
+        type: string
+    type: object
+  server.ChannelResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      server_id:
+        type: string
+      type:
+        type: string
+    type: object
+  server.ChannelSendRequest:
+    properties:
+      content:
+        type: string
+    type: object
+  server.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  server.InviteLinkResponse:
+    properties:
+      id:
+        type: string
+      joins_left:
+        type: integer
+      server_id:
+        type: string
+    type: object
+  server.InviteLinksNewRequest:
+    properties:
+      max_users:
+        type: integer
+    type: object
+  server.LoginRequest:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  server.LoginResponse:
+    properties:
+      message:
+        type: string
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/server.UserResponse'
+    type: object
+  server.MessageSendResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  server.RegisterRequest:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  server.RegisterResponse:
+    properties:
+      message:
+        type: string
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/server.UserResponse'
+    type: object
+  server.RoleCreateRequest:
+    properties:
+      name:
+        type: string
+      permissions:
+        items:
+          type: string
+        type: array
+    type: object
+  server.RoleResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      permissions:
+        type: integer
+      server_id:
+        type: string
+    type: object
+  server.RoleUpdateRequest:
+    properties:
+      administrator:
+        type: boolean
+      attach_files:
+        type: boolean
+      ban_users:
+        type: boolean
+      create_invites:
+        type: boolean
+      embed_links:
+        type: boolean
+      kick_users:
+        type: boolean
+      manage_channels:
+        type: boolean
+      manage_invites:
+        type: boolean
+      manage_messages:
+        type: boolean
+      manage_roles:
+        type: boolean
+      manage_server:
+        type: boolean
+      mention_everyone:
+        type: boolean
+      send_messages:
+        type: boolean
+    type: object
+  server.ServerKickRequest:
+    properties:
+      id:
+        type: string
+    type: object
+  server.ServerNewRequest:
+    properties:
+      name:
+        type: string
+    type: object
+  server.ServerResponse:
+    properties:
+      avatar:
+        type: string
+      channels:
+        items:
+          $ref: '#/definitions/server.ChannelResponse'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: string
+    type: object
+  server.UserMeResponse:
+    properties:
+      servers:
+        items:
+          $ref: '#/definitions/server.ServerResponse'
+        type: array
+      user:
+        $ref: '#/definitions/server.UserResponse'
+    type: object
+  server.UserResponse:
+    properties:
+      avatar:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: authenticate user with name and password
+      parameters:
+      - description: login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: login user
+      tags:
+      - auth
+  /auth/refresh:
+    get:
+      description: generate a new JWT token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: refresh token
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: create a new user account
+      parameters:
+      - description: registration data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/server.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: register user
+      tags:
+      - auth
+  /channel/{id}/send:
+    post:
+      consumes:
+      - application/json
+      description: send a message to a channel
+      parameters:
+      - description: channel id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: message content
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server.ChannelSendRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.MessageSendResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: send message
+      tags:
+      - channels
+  /server:
+    post:
+      consumes:
+      - application/json
+      description: create a new server with the user as owner
+      parameters:
+      - description: server creation data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server.ServerNewRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/server.ServerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: create server
+      tags:
+      - servers
+  /server/{id}:
+    get:
+      description: get server information and channels
+      parameters:
+      - description: server id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.ServerResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: get server
+      tags:
+      - servers
+  /server/{id}/kick:
+    post:
+      consumes:
+      - application/json
+      description: remove a user from the server
+      parameters:
+      - description: server id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: user to kick
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server.ServerKickRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: kick user
+      tags:
+      - servers
+  /server/{id}/links:
+    get:
+      description: get all invite links for the server
+      parameters:
+      - description: server id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/server.InviteLinkResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: list invite links
+      tags:
+      - servers
+    post:
+      consumes:
+      - application/json
+      description: create a new invite link for the server
+      parameters:
+      - description: server id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: invite link data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server.InviteLinksNewRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/server.InviteLinkResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: create invite link
+      tags:
+      - servers
+  /server/{id}/new_channel:
+    post:
+      consumes:
+      - application/json
+      description: create a new channel in a server
+      parameters:
+      - description: server id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: channel creation data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server.ChannelNewRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/server.ChannelResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: create channel
+      tags:
+      - channels
+  /server/{id}/roles:
+    get:
+      description: get all roles for the server
+      parameters:
+      - description: server id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/server.RoleResponse'
+            type: array
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: list roles
+      tags:
+      - roles
+    post:
+      consumes:
+      - application/json
+      description: create a new role with permissions for the server
+      parameters:
+      - description: server id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: role creation data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server.RoleCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/server.RoleResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: create role
+      tags:
+      - roles
+  /server/{id}/roles/{role_id}:
+    delete:
+      description: delete an existing role from the server
+      parameters:
+      - description: server id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: role id
+        in: path
+        name: role_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: delete role
+      tags:
+      - roles
+    put:
+      consumes:
+      - application/json
+      description: update permissions for an existing role
+      parameters:
+      - description: server id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: role id
+        in: path
+        name: role_id
+        required: true
+        type: string
+      - description: role update data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server.RoleUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.RoleResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: update role
+      tags:
+      - roles
+  /server/{id}/roles/assign/{user_id}/{role_id}:
+    put:
+      description: assign a role to a user in the server
+      parameters:
+      - description: server id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: target user id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: role id
+        in: path
+        name: role_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: assign role
+      tags:
+      - roles
+  /user/me:
+    get:
+      description: get current user information and servers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.UserMeResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: get user info
+      tags:
+      - users
+swagger: "2.0"

@@ -1,0 +1,91 @@
+* solace
+a messaging app (mostly)
+* style guide
+** code
+*** general principles
+- use lowercase for everything: comments, codes, http responses, UI 
+- dont leave many comments
+- prioritize good naming over comments; variable/function names should be descriptive and unambiguous
+- write the minimum code necessary to achieve functionality, minimizing bug surface area
+- comments are only added where code would be incomprehensible without them (e.g., complex business logic or non-obvious side effects)
+
+*** javascript/typescript (frontend)
+- ALWAYS use the base16 colors
+- prefer functional programming concepts over procedural or object-oriented approaches
+  - use pure functions where possible (e.g., avoid mutating inputs)
+  - prefer array methods like map(), filter(), and reduce() over for-loops
+  - group related functions into objects (e.g., user.get instead of getUser) to organize code logically
+  - example: instead of a class with methods, use an object literal
+    #+BEGIN_SRC js
+    const user = {
+      get: (id) => api.user.byId(id),
+      update: (id, data) => api.user.update(id, data)
+    };
+    #+END_SRC
+- let Svelte handle as much as it can, avoid direct dom manipulation
+- use classes for complex stateful objects (e.g., stores) with $state for reactivity
+- group related state and methods in store classes rather than loose object literals
+- use $derived for computed values that depend on other state
+- make sure to use the logging library
+
+*** go (backend)
+- focus on readability and type safety; leverage go's static typing extensively
+- use gorm for orm operations and echo for http routing
+- structure code with clear separation of concerns (e.g., handlers in server/, data access in orm/)
+- example: keep handlers focused on request/response logic, delegate business logic to separate functions
+- handle all errors (and if you really don't wanna, leave a TODO comment)
+
+** visual design
+- make it VERY playful with animations, but not with color
+- make text look like beautiful and like icons
+- fonts should be monospaced for a terminal feel
+- the application must have a blocky, terminal-inspired appearance, reminiscent of vim
+- layout should prioritize functionality over aesthetics; use minimal padding/margins for a compact look
+- example: buttons and inputs should have sharp corners, solid borders, and hover states that subtly change background color
+
+** architecture
+*** frontend
+- implement it in a way where data and display concerns are very very separate
+- use sveltekit for routing and state management; avoid mixing logic in templates
+- example: cache data in dedicated stores (like caches.svelte.ts), and components should only handle presentation
+
+*** backend
+- implement in a way that's as readable and as type-reliant as possible
+- go (gorm+echo) and sveltekit
+- ensure all endpoints are well-typed and validated; use tygo to sync types between backend and frontend
+- example: define request/response structs explicitly, and handle errors consistently with http status codes
+
+*** toolling
+- `tygo` for moving types from back to front
+- `just` as the task runner
+- example: run `just dev` for development; avoid manual npm/go commands
+
+** conventions not covered elsewhere
+*** naming
+- go: use snake_case for variables/functions (e.g., user_by_name), pascalcase for types (e.g., userresponse)
+- javascript/typescript: use camelcase for variables/functions (e.g., getuser), pascalcase for types/components (e.g., userresponse, messagecomponent)
+- files: use snake_case for go files (e.g., auth_login.go), kebab-case for web files (e.g., caches.svelte.ts)
+
+*** error handling
+- frontend: display errors via alert system or inline text; avoid modal dialogs
+- use optimistic updates for better UX, with clear failure feedback
+- provide retry mechanisms for failed operations
+- log errors to console for debugging but keep UI messages user-friendly
+
+*** testing
+- write minimal, focused tests for critical paths (e.g., api endpoints, caching logic)
+- use go's testing package for backend; vitest or similar for frontend
+
+*** file organization
+- group related files in directories (e.g., server/ for handlers, lib/ for shared frontend code)
+- avoid nesting, keep the structure flat where possible
+
+*** performance
+- minimize reactive dependencies; be explicit about what triggers updates
+- debounce expensive operations
+
+* todo
+** DONE add api docs with bruno
+** TODO make a message/notif queue
+** TODO make one subscription for all sse and have the api calls be swap
+** TODO add create/join server buttons

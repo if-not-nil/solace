@@ -1,0 +1,15 @@
+meta {
+  name: get fike
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{url}}/api/file/KHORO4F0.png
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

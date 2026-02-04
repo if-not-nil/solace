@@ -1,0 +1,21 @@
+meta {
+  name: new channel
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{url}}/api/server/{{server_id}}/new_channel
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "asdfasdf"
+  }
+}

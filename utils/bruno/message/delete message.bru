@@ -1,0 +1,15 @@
+meta {
+  name: delete message
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{url}}/api/message/{{message_id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

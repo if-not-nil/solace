@@ -1,0 +1,21 @@
+meta {
+  name: revoke invite link
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{url}}/api/server/{{server_id}}/links/ZFh4DRkG
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "max_users": 2
+  }
+}

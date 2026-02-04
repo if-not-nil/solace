@@ -1,0 +1,26 @@
+meta {
+  name: update role
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{url}}/api/server/{{server_id}}/roles/member
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "kick_users": true,
+    "ban_users": true,
+    "manage_channels": true,
+    "manage_roles": false,
+    "invite_users": true,
+    "delete_messages": true
+  }
+}

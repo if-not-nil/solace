@@ -1,0 +1,15 @@
+meta {
+  name: delete role
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{url}}/api/server/{{server_id}}/roles/test
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

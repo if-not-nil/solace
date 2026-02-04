@@ -1,0 +1,10 @@
+packages:
+  - path: "solace/orm"
+    output_path: "../web/src/lib/orm_types.ts"
+    type_mappings:
+      time.Time: "string /* RFC3339 */"
+      null.String: "null | string"
+      null.Bool: "null | boolean"
+      uuid.UUID: "string /* uuid */"
+      uuid.NullUUID: "null | string /* uuid */"
+      gorm.DeletedAt: "string | null"

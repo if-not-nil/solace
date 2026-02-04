@@ -1,0 +1,15 @@
+meta {
+  name: upload file
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/api/file/upload
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(/Users/test/Downloads/Peter_Griffin.png)
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Edit Message - Invalid JSON
+  type: http
+  seq: 8
+}
+
+put {
+  url: {{base_url}}/messages/{{message_id}}
+  body: raw
+  auth: none
+  
+  body:raw {
+    invalid json
+  }
+}
+
+tests {
+  test("Should return 400 for invalid JSON", function() {
+    expect(res.status).to.equal(400);
+  });
+}
+
+vars:secret {
+  base_url: env.BASE_URL,
+  message_id: env.MESSAGE_ID
+}

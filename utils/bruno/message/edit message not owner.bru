@@ -1,0 +1,31 @@
+meta {
+  name: Edit Message - Not Owner
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{base_url}}/messages/{{other_message_id}}
+  body: json
+  auth: bearer
+  
+  body:json {
+    "content": "Hacked message"
+  }
+  
+  headers: {
+    Authorization: "Bearer {{other_token}}"
+  }
+}
+
+tests {
+  test("Should return 403 when not message owner", function() {
+    expect(res.status).to.equal(403);
+  });
+}
+
+vars:secret {
+  base_url: env.BASE_URL,
+  other_message_id: env.OTHER_MESSAGE_ID,
+  other_token: env.OTHER_TOKEN
+}

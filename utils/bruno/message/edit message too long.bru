@@ -1,0 +1,27 @@
+meta {
+  name: Edit Message - Too Long
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{base_url}}/messages/{{message_id}}
+  body: json
+  auth: none
+  
+  body:json {
+    "content": "{{long_content}}"
+  }
+}
+
+tests {
+  test("Should return 400 for too long content", function() {
+    expect(res.status).to.equal(400);
+  });
+}
+
+vars:secret {
+  base_url: env.BASE_URL,
+  message_id: env.MESSAGE_ID,
+  long_content: env.LONG_CONTENT || "This is a very long message that exceeds the 2000 character limit. ".repeat(50)
+}

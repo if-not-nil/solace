@@ -1,0 +1,29 @@
+meta {
+  name: create role
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{url}}/api/server/{{server_id}}/roles
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "test",
+    "permissions": [
+      "kick_users",
+      "ban_users",
+      "manage_channels",
+      "manage_roles",
+      "invite_users",
+      "delete_messages"
+    ]
+  }
+}

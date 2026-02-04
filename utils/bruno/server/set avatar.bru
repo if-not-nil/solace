@@ -1,0 +1,19 @@
+meta {
+  name: set avatar
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{url}}/api/server/{{server_id}}/avatar
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  file: @file(/Users/test/Downloads/248.gif) @contentType(image/gif)
+}

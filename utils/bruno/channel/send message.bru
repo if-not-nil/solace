@@ -1,0 +1,21 @@
+meta {
+  name: send message
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/api/channel/zbF7nc90/send
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "content": "qwer"
+  }
+}

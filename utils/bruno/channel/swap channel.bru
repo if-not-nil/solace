@@ -1,0 +1,19 @@
+meta {
+  name: swap channel
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{url}}/api/sse/swap?channel_id=1
+  body: none
+  auth: bearer
+}
+
+params:query {
+  channel_id: 1
+}
+
+auth:bearer {
+  token: {{token}}
+}

@@ -1,0 +1,25 @@
+# OS
+.DS_Store
+Thumbs.db
+app-store/*
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+node_modules
+
+.cache
+
+.local
+.npm
+.env
+.ash_history
+/docker-compose.override.yml
+pbsk.code-workspace
+.termdbms
+go/data/*
+go/bin
+tmp
+go/solace

@@ -1,0 +1,11 @@
+meta {
+  name: ban user
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{url}}/server/{{server_id}}/members/name/ban
+  body: none
+  auth: inherit
+}

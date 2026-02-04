@@ -1,0 +1,25 @@
+meta {
+  name: get server
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{url}}/api/server/Twlis4Jt
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "asefaefsae"
+  }
+}
+
+script:post-response {
+  bru.setEnvVar("server_id",res.getBody().id)
+}

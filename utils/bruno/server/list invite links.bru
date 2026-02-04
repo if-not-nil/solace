@@ -1,0 +1,21 @@
+meta {
+  name: list invite links
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{url}}/api/server/{{server_id}}/links
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "max_users": 2
+  }
+}

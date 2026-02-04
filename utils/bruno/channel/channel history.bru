@@ -1,0 +1,22 @@
+meta {
+  name: channel history
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/api/channel/E0CzhqBA/history
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "count": 53
+    // there should be a date in unix time
+  }
+}

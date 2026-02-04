@@ -1,0 +1,25 @@
+meta {
+  name: assign role to user
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{url}}/api/server/{{server_id}}/roles/assign/asdf/test
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  [
+    "kick_users",
+    "ban_users",
+    "manage_channels",
+    "invite_users",
+    "delete_messages"
+  ]
+}

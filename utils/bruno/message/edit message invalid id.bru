@@ -1,0 +1,25 @@
+meta {
+  name: Edit Message - Invalid ID
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{base_url}}/messages/invalid_id
+  body: json
+  auth: none
+  
+  body:json {
+    "content": "This should fail"
+  }
+}
+
+tests {
+  test("Should return 404 for invalid message ID", function() {
+    expect(res.status).to.equal(404);
+  });
+}
+
+vars:secret {
+  base_url: env.BASE_URL
+}

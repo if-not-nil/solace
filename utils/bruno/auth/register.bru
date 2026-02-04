@@ -1,0 +1,22 @@
+meta {
+  name: register
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/api/auth/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "loxas",
+    "password": "password"
+  }
+}
+
+script:post-response {
+  bru.setEnvVar("token",res.getBody().token)
+}
